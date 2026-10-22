@@ -4,6 +4,8 @@
  */
 package hotelreservationsystem;
 
+import hotelreservationsystem.dv.DataBase;
+
 /**
  *
  * @author Administrator
@@ -15,6 +17,12 @@ public class HotelReservationSystem {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+//        DataBase db = new DataBase();
+//        db.getCon();
+
+
+
+
     }
-    
+
 }
