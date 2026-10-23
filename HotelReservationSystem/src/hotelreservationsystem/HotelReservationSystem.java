@@ -4,7 +4,7 @@
  */
 package hotelreservationsystem;
 
-import hotelreservationsystem.dv.DataBase;
+import hotelreservationsystem.db.DataBase;
 
 /**
  *
