@@ -20,7 +20,7 @@ public class Payment {
 
     private PaymentMethod method;
 
-    private ReservationStatus status;
+   
 
     private String reference;
 
@@ -58,13 +58,7 @@ public class Payment {
         this.method = method;
     }
 
-    public ReservationStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(ReservationStatus status) {
-        this.status = status;
-    }
+   
 
     public String getReference() {
         return reference;

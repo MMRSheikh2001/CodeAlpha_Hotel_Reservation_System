@@ -5,6 +5,11 @@
 package hotelreservationsystem;
 
 import hotelreservationsystem.db.DataBase;
+import hotelreservationsystem.db.PaymentDao;
+import hotelreservationsystem.db.ReservationDao;
+import hotelreservationsystem.db.RoomDao;
+import hotelreservationsystem.db.UserDao;
+import hotelreservationsystem.models.User;
 
 /**
  *
@@ -19,10 +24,29 @@ public class HotelReservationSystem {
         // TODO code application logic here
 //        DataBase db = new DataBase();
 //        db.getCon();
-
-
-
-
+//
+//        PaymentDao pd = new PaymentDao();
+//        pd.createTable();
+//        ReservationDao rd = new ReservationDao();
+//        rd.createTable();
+//
+//        RoomDao roomDao = new RoomDao();
+//        roomDao.createTable();
+//
+        UserDao ud = new UserDao();
+//        ud.createTable();
+//
+//        User admin = new User();
+//        admin.setFullName("Admin");
+//        admin.setUserName("admin");
+//        admin.setPassword("1234");
+//        admin.setIsAdmin(Boolean.TRUE);
+//        ud.save(admin);
+        
+        User adminFound=ud.findById(1L);
+        System.out.println("Name  :"+ adminFound.getFullName() +" Password : "+adminFound.getPassword());
+        
+        
     }
-
+    
 }
