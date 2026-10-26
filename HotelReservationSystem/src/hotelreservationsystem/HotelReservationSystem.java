@@ -10,6 +10,7 @@ import hotelreservationsystem.db.ReservationDao;
 import hotelreservationsystem.db.RoomDao;
 import hotelreservationsystem.db.UserDao;
 import hotelreservationsystem.models.User;
+import hotelreservationsystem.views.LoginView;
 
 /**
  *
@@ -42,10 +43,11 @@ public class HotelReservationSystem {
 //        admin.setPassword("1234");
 //        admin.setIsAdmin(Boolean.TRUE);
 //        ud.save(admin);
-        
+
 //        User adminFound=ud.findById(1L);
 //        System.out.println("Name  :"+ adminFound.getFullName() +" Password : "+adminFound.getPassword());
-        
+        LoginView lv = new LoginView();
+        lv.setVisible(true);
         
     }
     
