@@ -9,13 +9,16 @@ package hotelreservationsystem.models;
  * @author Administrator
  */
 public class Room {
+
     private Long id;
-    
+
+    private String roomNumber;
+
     private RoomCategory category;
-    
-    private Double price;
-    
-    private Boolean isBooked;
+
+    private Double pricePerNight;
+
+    private Boolean active;
 
     public Long getId() {
         return id;
@@ -33,23 +36,28 @@ public class Room {
         this.category = category;
     }
 
-    public Double getPrice() {
-        return price;
+    public String getRoomNumber() {
+        return roomNumber;
     }
 
-    public void setPrice(Double price) {
-        this.price = price;
+    public void setRoomNumber(String roomNumber) {
+        this.roomNumber = roomNumber;
     }
 
-    public Boolean getIsBooked() {
-        return isBooked;
+    public Double getPricePerNight() {
+        return pricePerNight;
     }
 
-    public void setIsBooked(Boolean isBooked) {
-        this.isBooked = isBooked;
+    public void setPricePerNight(Double pricePerNight) {
+        this.pricePerNight = pricePerNight;
     }
-    
-    
-    
-    
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
 }
