@@ -43,8 +43,8 @@ public class HotelReservationSystem {
 //        admin.setIsAdmin(Boolean.TRUE);
 //        ud.save(admin);
         
-        User adminFound=ud.findById(1L);
-        System.out.println("Name  :"+ adminFound.getFullName() +" Password : "+adminFound.getPassword());
+//        User adminFound=ud.findById(1L);
+//        System.out.println("Name  :"+ adminFound.getFullName() +" Password : "+adminFound.getPassword());
         
         
     }
