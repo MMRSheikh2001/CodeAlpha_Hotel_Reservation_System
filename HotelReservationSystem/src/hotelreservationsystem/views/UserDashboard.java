@@ -4,17 +4,26 @@
  */
 package hotelreservationsystem.views;
 
+import hotelreservationsystem.models.User;
+
 /**
  *
  * @author Administrator
  */
 public class UserDashboard extends javax.swing.JFrame {
 
+    private User user;
+
     /**
      * Creates new form UserDashboard
      */
     public UserDashboard() {
         initComponents();
+    }
+
+    public UserDashboard(User user) {
+        initComponents();
+        this.user = user;
     }
 
     /**

@@ -5,13 +5,16 @@
 package hotelreservationsystem.views;
 
 import hotelreservationsystem.db.UserDao;
+import hotelreservationsystem.models.User;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author Administrator
  */
 public class LoginView extends javax.swing.JFrame {
-    UserDao userDao=new UserDao();
+
+    UserDao userDao = new UserDao();
 
     /**
      * Creates new form LoginView
@@ -86,16 +89,18 @@ public class LoginView extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(89, 89, 89)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtUserName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(31, 31, 31)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(8, 8, 8)
+                        .addComponent(txtUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(88, 88, 88)
                 .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 215, Short.MAX_VALUE))
+                .addGap(0, 213, Short.MAX_VALUE))
         );
 
         pack();
@@ -104,10 +109,46 @@ public class LoginView extends javax.swing.JFrame {
 
     private void btnLoginMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLoginMouseClicked
         // TODO add your handling code here:
-        
-        
-        
-        
+
+        String userName = txtUserName.getText().trim().toLowerCase();
+        String password = txtPassword.getText().trim();
+
+        if (userName.isEmpty() || password.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Invalid Input");
+            return;
+        }
+
+        User user = userDao.findByUserName(userName);
+
+        if (user == null) {
+            JOptionPane.showMessageDialog(null, "Invalid User Name or Password");
+            return;
+        } else {
+            if (password.equals(user.getPassword())) {
+
+                if (Boolean.TRUE.equals(user.getIsAdmin())) {
+                    AdminDashboard ad = new AdminDashboard();
+                    ad.setVisible(true);
+
+                } else {
+
+                    UserDashboard ud = new UserDashboard(user);
+
+                    ud.setVisible(true);
+
+                }
+
+                this.dispose();
+
+            } else {
+                JOptionPane.showMessageDialog(null, "Invalid User Name or Password");
+                return;
+
+            }
+
+        }
+
+
     }//GEN-LAST:event_btnLoginMouseClicked
 
     /**
