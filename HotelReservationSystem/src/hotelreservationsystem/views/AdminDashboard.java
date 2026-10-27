@@ -35,7 +35,7 @@ public class AdminDashboard extends javax.swing.JFrame {
         txtTotalRooms.setText(roomDao.countAll()+"");
         txtTotalReservations.setText(reservationDao.countAll()+"");
         txtTotalPayments.setText(paymentDao.countAll()+"");
-        txtTotalIncomes.setText("");
+        txtTotalIncomes.setText(""+paymentDao.getTotalIncome());
         
     }
 

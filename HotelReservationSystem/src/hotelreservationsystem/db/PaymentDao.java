@@ -49,11 +49,29 @@ public class PaymentDao {
             Logger.getLogger(PaymentDao.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public Double getTotalIncome(){
-    
-    
-    
+
+    public Double getTotalIncome() {
+        sql = "select coalesce(sum(amount), 0) from payments";
+        Double total = 0.0;
+
+        try {
+            ps = db.getCon().prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                total = rs.getDouble(1);
+            }
+
+            rs.close();
+            ps.getConnection().close();
+            ps.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(PaymentDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return Math.round(total * 100) / 100.0;
+
     }
 
     public int countAll() {
