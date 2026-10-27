@@ -49,6 +49,12 @@ public class PaymentDao {
             Logger.getLogger(PaymentDao.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public Double getTotalIncome(){
+    
+    
+    
+    }
 
     public int countAll() {
 
