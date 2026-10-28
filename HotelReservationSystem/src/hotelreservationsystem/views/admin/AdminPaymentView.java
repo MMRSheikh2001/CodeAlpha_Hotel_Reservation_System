@@ -4,18 +4,31 @@
  */
 package hotelreservationsystem.views.admin;
 
+import hotelreservationsystem.db.PaymentDao;
+import hotelreservationsystem.db.ReservationDao;
+import hotelreservationsystem.db.UserDao;
+import hotelreservationsystem.models.Payment;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Administrator
  */
 public class AdminPaymentView extends javax.swing.JFrame {
 
+    PaymentDao paymentDao = new PaymentDao();
+    ReservationDao reservationDao=new ReservationDao();
+    UserDao userDao=new UserDao();
+
     /**
      * Creates new form AdminPaymentView
      */
     public AdminPaymentView() {
         initComponents();
-         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        showAllPayments();
     }
 
     /**
@@ -55,7 +68,7 @@ public class AdminPaymentView extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 900, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -109,4 +122,20 @@ public class AdminPaymentView extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblShowAllPayments;
     // End of variables declaration//GEN-END:variables
+
+    private void showAllPayments() {
+
+        String[] list = {"SL", "Reservation Id","User Name", "Amount", "Method", "Reference", "Paid At"};
+        DefaultTableModel model = new DefaultTableModel();
+        model.setColumnIdentifiers(list);
+        tblShowAllPayments.setModel(model);
+
+        List<Payment> pList = paymentDao.findAll();
+
+        for (Payment p : pList) {
+            model.addRow(new Object[]{p.getId(), p.getReservationId(),userDao.findById(reservationDao.findById(p.getReservationId()).getUserId()).getUserName(), p.getAmount(), p.getMethod(), p.getReference(),
+                p.getPaidAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))});
+        }
+
+    }
 }
