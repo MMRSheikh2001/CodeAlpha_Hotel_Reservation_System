@@ -73,6 +73,8 @@ public class PaymentDao {
         return Math.round(total * 100) / 100.0;
 
     }
+    
+   
 
     public int countAll() {
 

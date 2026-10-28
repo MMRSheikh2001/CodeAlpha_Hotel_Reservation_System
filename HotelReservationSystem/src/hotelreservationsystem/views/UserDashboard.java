@@ -4,15 +4,24 @@
  */
 package hotelreservationsystem.views;
 
+import hotelreservationsystem.db.PaymentDao;
+import hotelreservationsystem.db.ReservationDao;
 import hotelreservationsystem.models.User;
+import hotelreservationsystem.views.users.UserBookRoomView;
+import hotelreservationsystem.views.users.UserCancelReservationView;
+import hotelreservationsystem.views.users.UserMakePaymentView;
+import hotelreservationsystem.views.users.UserReservationHistoryView;
 
 /**
  *
  * @author Administrator
  */
 public class UserDashboard extends javax.swing.JFrame {
-
+    
     private User user;
+    
+   
+    ReservationDao reservationDao = new ReservationDao();
 
     /**
      * Creates new form UserDashboard
@@ -20,10 +29,12 @@ public class UserDashboard extends javax.swing.JFrame {
     public UserDashboard() {
         initComponents();
     }
-
+    
     public UserDashboard(User user) {
         initComponents();
         this.user = user;
+       
+        txtTotalUserReservations.setText("" + reservationDao.countByUserId(user.getId()));
     }
 
     /**
@@ -36,6 +47,13 @@ public class UserDashboard extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        txtTotalUserReservations = new javax.swing.JTextField();
+        btnAllReservations = new javax.swing.JButton();
+        btnMakeReservations = new javax.swing.JButton();
+        btnCancelReservation = new javax.swing.JButton();
+        btnMakePayments = new javax.swing.JButton();
+        btnLogout = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -43,22 +61,145 @@ public class UserDashboard extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("User Dashboard");
 
+        jLabel2.setText("Total User Reservations");
+
+        txtTotalUserReservations.setEditable(false);
+
+        btnAllReservations.setBackground(new java.awt.Color(0, 255, 255));
+        btnAllReservations.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnAllReservations.setText("All Reservations");
+        btnAllReservations.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnAllReservationsMouseClicked(evt);
+            }
+        });
+
+        btnMakeReservations.setBackground(new java.awt.Color(51, 204, 0));
+        btnMakeReservations.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnMakeReservations.setText("Book Room");
+        btnMakeReservations.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnMakeReservationsMouseClicked(evt);
+            }
+        });
+
+        btnCancelReservation.setBackground(new java.awt.Color(255, 0, 51));
+        btnCancelReservation.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnCancelReservation.setText("Cancel Reservations");
+        btnCancelReservation.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnCancelReservationMouseClicked(evt);
+            }
+        });
+
+        btnMakePayments.setBackground(new java.awt.Color(153, 255, 0));
+        btnMakePayments.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnMakePayments.setText("Make Payment");
+        btnMakePayments.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnMakePaymentsMouseClicked(evt);
+            }
+        });
+
+        btnLogout.setBackground(new java.awt.Color(255, 0, 153));
+        btnLogout.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnLogout.setText("Logout");
+        btnLogout.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnLogoutMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE)
+            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(25, 25, 25)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(txtTotalUserReservations, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(43, 43, 43)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(btnMakePayments, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnMakeReservations, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(btnCancelReservation, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnAllReservations, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(260, 260, 260)
+                        .addComponent(btnLogout)))
+                .addContainerGap(56, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 564, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel2)
+                    .addComponent(txtTotalUserReservations, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(130, 130, 130)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnCancelReservation, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnMakeReservations, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(70, 70, 70)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnMakePayments, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAllReservations, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 77, Short.MAX_VALUE)
+                .addComponent(btnLogout)
+                .addGap(98, 98, 98))
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnMakeReservationsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMakeReservationsMouseClicked
+        // TODO add your handling code here:
+        UserBookRoomView ubrv = new UserBookRoomView(this.user);
+        ubrv.setVisible(true);
+        
+
+    }//GEN-LAST:event_btnMakeReservationsMouseClicked
+
+    private void btnCancelReservationMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelReservationMouseClicked
+        // TODO add your handling code here:
+
+        UserCancelReservationView ucrv = new UserCancelReservationView(this.user);
+        ucrv.setVisible(true);
+
+    }//GEN-LAST:event_btnCancelReservationMouseClicked
+
+    private void btnMakePaymentsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMakePaymentsMouseClicked
+        // TODO add your handling code here:
+
+        UserMakePaymentView umpv = new UserMakePaymentView(this.user);
+        umpv.setVisible(true);
+    }//GEN-LAST:event_btnMakePaymentsMouseClicked
+
+    private void btnAllReservationsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAllReservationsMouseClicked
+        // TODO add your handling code here:
+        UserReservationHistoryView urhv = new UserReservationHistoryView(this.user);
+        urhv.setVisible(true);
+        
+
+    }//GEN-LAST:event_btnAllReservationsMouseClicked
+
+    private void btnLogoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLogoutMouseClicked
+        // TODO add your handling code here:
+
+        LoginView lv = new LoginView();
+        lv.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnLogoutMouseClicked
 
     /**
      * @param args the command line arguments
@@ -96,6 +237,13 @@ public class UserDashboard extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAllReservations;
+    private javax.swing.JButton btnCancelReservation;
+    private javax.swing.JButton btnLogout;
+    private javax.swing.JButton btnMakePayments;
+    private javax.swing.JButton btnMakeReservations;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JTextField txtTotalUserReservations;
     // End of variables declaration//GEN-END:variables
 }
