@@ -4,18 +4,29 @@
  */
 package hotelreservationsystem.views.admin;
 
+import hotelreservationsystem.db.RoomDao;
+import hotelreservationsystem.models.Room;
+import hotelreservationsystem.models.RoomCategory;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Administrator
  */
 public class AdminRoomView extends javax.swing.JFrame {
 
+    RoomDao roomDao = new RoomDao();
+
     /**
      * Creates new form AdminRoomView
      */
     public AdminRoomView() {
         initComponents();
-         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        loadComboBoxes();
+        showRooms();
     }
 
     /**
@@ -186,31 +197,177 @@ public class AdminRoomView extends javax.swing.JFrame {
 
     private void btnSaveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSaveMouseClicked
         // TODO add your handling code here:
-        
-        
-        
-        
-        
+
+        String roomNumber = txtRoomNumber.getText().trim();
+        String priceText = txtRoomPrice.getText().trim();
+
+        if (roomNumber.isEmpty() || priceText.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Give Room Number and Price");
+            return;
+        }
+
+        Double price;
+        try {
+            price = Double.valueOf(priceText);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Give Proper Price" + e);
+            return;
+        }
+
+        if (price <= 0) {
+            JOptionPane.showMessageDialog(null, "Price must be more than 0");
+            return;
+        }
+
+        if (isRoomNumberTaken(roomNumber, null)) {
+            JOptionPane.showMessageDialog(null, "Room Number Already exists");
+            return;
+        }
+
+        Room room = new Room();
+
+        room.setRoomNumber(roomNumber);
+        room.setCategory(RoomCategory.valueOf(cmbRoomCategory.getSelectedItem().toString()));
+        room.setPricePerNight(price);
+        room.setActive(cmbStatus.getSelectedItem().toString().equals("Active"));
+
+        roomDao.save(room);
+
+        showRooms();
+        clearData();
+
+
     }//GEN-LAST:event_btnSaveMouseClicked
 
     private void btnResetMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnResetMouseClicked
         // TODO add your handling code here:
+        clearData();
     }//GEN-LAST:event_btnResetMouseClicked
 
     private void btnUpdateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnUpdateMouseClicked
         // TODO add your handling code here:
-        
-        
-        
+
+        String id = txtRoomId.getText().trim();
+        String roomNumber = txtRoomNumber.getText().trim();
+        String priceText = txtRoomPrice.getText().trim();
+
+        if (id.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Select a room from the table first");
+            return;
+        }
+
+        if (roomNumber.isEmpty() || priceText.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Give Room Number and Price");
+            return;
+        }
+
+        Double price;
+        try {
+            price = Double.valueOf(priceText);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Give Proper Price" + e);
+            return;
+        }
+
+        if (price <= 0) {
+            JOptionPane.showMessageDialog(null, "Price must be more than 0");
+            return;
+        }
+
+        // load the room from the database, then change only what is on the screen
+        Room room = roomDao.findById(Long.valueOf(id));
+
+        if (room == null) {
+            JOptionPane.showMessageDialog(null, "Room not found");
+            return;
+        }
+
+        // the room number may only belong to this same room
+        if (isRoomNumberTaken(roomNumber, room.getId())) {
+            JOptionPane.showMessageDialog(null, "Room Number Already exists");
+            return;
+        }
+
+        room.setRoomNumber(roomNumber);
+        room.setCategory(RoomCategory.valueOf(cmbRoomCategory.getSelectedItem().toString()));
+        room.setPricePerNight(price);
+        room.setActive(cmbStatus.getSelectedItem().toString().equals("Active"));
+
+        roomDao.update(room);
+
+        showRooms();
+        clearData();
+
+
     }//GEN-LAST:event_btnUpdateMouseClicked
 
     private void tblShowRoomsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblShowRoomsMouseClicked
         // TODO add your handling code here:
-        
-        
-        
-        
+
+        int row = tblShowRooms.getSelectedRow();
+        if (row >= 0) {
+
+            String id = tblShowRooms.getModel().getValueAt(row, 0).toString();
+            String roomNumber = tblShowRooms.getModel().getValueAt(row, 1).toString();
+            String category = tblShowRooms.getModel().getValueAt(row, 2).toString();
+            String price = tblShowRooms.getModel().getValueAt(row, 3).toString();
+            String status = tblShowRooms.getModel().getValueAt(row, 4).toString();
+
+            txtRoomId.setText(id);
+            txtRoomNumber.setText(roomNumber);
+            cmbRoomCategory.setSelectedItem(category);
+            txtRoomPrice.setText(price);
+            cmbStatus.setSelectedItem(status);
+        }
+
+
     }//GEN-LAST:event_tblShowRoomsMouseClicked
+
+    private void loadComboBoxes() {
+
+        cmbRoomCategory.removeAllItems();
+        for (RoomCategory category : RoomCategory.values()) {
+            cmbRoomCategory.addItem(category.name());
+        }
+
+        cmbStatus.removeAllItems();
+        cmbStatus.addItem("Active");
+        cmbStatus.addItem("Inactive");
+    }
+
+    private void showRooms() {
+
+        String[] list = {"SL", "Room Number", "Category", "Price Per Night", "Status"};
+
+        DefaultTableModel model = new DefaultTableModel();
+        model.setColumnIdentifiers(list);
+        tblShowRooms.setModel(model);
+
+        List<Room> rList = roomDao.findAll();
+
+        for (Room r : rList) {
+            model.addRow(new Object[]{r.getId(), r.getRoomNumber(), r.getCategory(), r.getPricePerNight(), r.getActive() ? "Active" : "Inactive"});
+        }
+    }
+
+    private boolean isRoomNumberTaken(String roomNumber, Long exceptId) {
+
+        for (Room r : roomDao.findAll()) {
+            if (r.getRoomNumber().equalsIgnoreCase(roomNumber) && !r.getId().equals(exceptId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void clearData() {
+
+        txtRoomId.setText("");
+        txtRoomNumber.setText("");
+        txtRoomPrice.setText("");
+        cmbRoomCategory.setSelectedIndex(0);
+        cmbStatus.setSelectedIndex(0);
+    }
 
     /**
      * @param args the command line arguments

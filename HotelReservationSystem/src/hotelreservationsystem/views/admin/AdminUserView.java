@@ -7,6 +7,7 @@ package hotelreservationsystem.views.admin;
 import hotelreservationsystem.db.UserDao;
 import hotelreservationsystem.models.User;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -193,6 +194,32 @@ public class AdminUserView extends javax.swing.JFrame {
     private void btnSaveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSaveMouseClicked
         // TODO add your handling code here:
 
+        String userName = txtUserName.getText().trim().toLowerCase();
+        String password = txtPassword.getText().trim();
+        String fullName = txtFullName.getText().trim();
+
+        if (userName.isEmpty() || password.isEmpty() || fullName.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Give User Name, Password and Full Name");
+            return;
+        }
+
+        if (userDao.findByUserName(userName) != null) {
+            JOptionPane.showMessageDialog(null, "User Name Already exists");
+            return;
+        }
+
+        User user = new User();
+
+        user.setUserName(userName);
+        user.setPassword(password);
+        user.setFullName(fullName);
+        user.setIsAdmin(false);
+
+        userDao.save(user);
+
+        showUsers();
+        clearData();
+
 
     }//GEN-LAST:event_btnSaveMouseClicked
 
@@ -205,11 +232,65 @@ public class AdminUserView extends javax.swing.JFrame {
     private void btnUpdateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnUpdateMouseClicked
         // TODO add your handling code here:
 
+        String id = txtUserId.getText().trim();
+        String userName = txtUserName.getText().trim().toLowerCase();
+        String password = txtPassword.getText().trim();
+        String fullName = txtFullName.getText().trim();
+
+        if (id.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Select a user from the table first");
+            return;
+        }
+
+        if (userName.isEmpty() || password.isEmpty() || fullName.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Give User Name, Password and Full Name");
+            return;
+        }
+
+        // load the user from the database, so isAdmin (not shown on screen) is kept
+        User user = userDao.findById(Long.valueOf(id));
+
+        if (user == null) {
+            JOptionPane.showMessageDialog(null, "User not found");
+            return;
+        }
+
+        // the name may only belong to this same user
+        User sameName = userDao.findByUserName(userName);
+
+        if (sameName != null && !sameName.getId().equals(user.getId())) {
+            JOptionPane.showMessageDialog(null, "User Name Already exists");
+            return;
+        }
+
+        user.setUserName(userName);
+        user.setPassword(password);
+        user.setFullName(fullName);
+
+        userDao.update(user);
+
+        showUsers();
+        clearData();
 
     }//GEN-LAST:event_btnUpdateMouseClicked
 
     private void tblShowUsersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblShowUsersMouseClicked
         // TODO add your handling code here:
+        // TODO add your handling code here:
+
+        int row = tblShowUsers.getSelectedRow();
+        if (row >= 0) {
+
+            String id = tblShowUsers.getModel().getValueAt(row, 0).toString();
+            String userName = tblShowUsers.getModel().getValueAt(row, 1).toString();
+            String fullName = tblShowUsers.getModel().getValueAt(row, 2).toString();
+            String password = tblShowUsers.getModel().getValueAt(row, 3).toString();
+
+            txtUserId.setText(id);
+            txtUserName.setText(userName);
+            txtFullName.setText(fullName);
+            txtPassword.setText(password);
+        }
 
 
     }//GEN-LAST:event_tblShowUsersMouseClicked
