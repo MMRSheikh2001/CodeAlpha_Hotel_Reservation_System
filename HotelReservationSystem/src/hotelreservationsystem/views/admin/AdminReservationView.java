@@ -8,16 +8,23 @@ import hotelreservationsystem.db.PaymentDao;
 import hotelreservationsystem.db.ReservationDao;
 import hotelreservationsystem.db.RoomDao;
 import hotelreservationsystem.db.UserDao;
+import hotelreservationsystem.models.Payment;
+import hotelreservationsystem.models.Reservation;
+import hotelreservationsystem.models.Room;
+import hotelreservationsystem.models.User;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author Administrator
  */
 public class AdminReservationView extends javax.swing.JFrame {
-    ReservationDao reservationDao=new ReservationDao();
-    UserDao userDao=new UserDao();
-    RoomDao roomDao=new RoomDao();
-    PaymentDao paymentDao=new PaymentDao();
+
+    ReservationDao reservationDao = new ReservationDao();
+    UserDao userDao = new UserDao();
+    RoomDao roomDao = new RoomDao();
+    PaymentDao paymentDao = new PaymentDao();
 
     /**
      * Creates new form AdminReservationView
@@ -123,7 +130,22 @@ public class AdminReservationView extends javax.swing.JFrame {
 
     private void showAllReservations() {
 
-        
+        String[] list = {"SL", "User Name", "Room Number", "Check In", "Check Out", "Total Price", "Status", "Payment"};
+        DefaultTableModel model = new DefaultTableModel();
+        model.setColumnIdentifiers(list);
+        tblShowAllReservations.setModel(model);
+
+        List<Reservation> rList = reservationDao.findAll();
+
+        for (Reservation r : rList) {
+
+            User user = userDao.findById(r.getUserId());
+            Room room = roomDao.findById(r.getRoomId());
+            Payment payment = paymentDao.findByReservationId(r.getId());
+
+            model.addRow(new Object[]{r.getId(), user.getUserName(), room.getRoomNumber(), r.getCheckIn(), r.getCheckOut(),
+                r.getTotalPrice(), r.getStatus(), payment == null ? "Not Paid" : "Paid"});
+        }
 
     }
 }
