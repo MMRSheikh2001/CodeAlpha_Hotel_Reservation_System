@@ -31,6 +31,7 @@ public class AdminReservationView extends javax.swing.JFrame {
      */
     public AdminReservationView() {
         initComponents();
+          setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         showAllReservations();
     }
 
